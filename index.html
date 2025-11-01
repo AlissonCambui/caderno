@@ -73,6 +73,9 @@
             <a href="#" data-page="ambiental" class="nav-link flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                 <i data-lucide="leaf" class="w-5 h-5"></i><span>Ambiental</span>
             </a>
+            <a href="#" data-page="humanos" class="nav-link flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <i data-lucide="heart" class="w-5 h-5"></i><span>Direitos Humanos</span>
+            </a>
         </nav>
     </aside>
 
@@ -142,6 +145,11 @@
                 <div id="pdf-list-ambiental" class="pdf-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
             </section>
 
+            <section id="page-humanos" class="page-content hidden">
+                <h3 class="text-2xl font-semibold mb-6">Direitos Humanos</h3>
+                <div id="pdf-list-humanos" class="pdf-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+            </section>
+
             <section id="page-search-results" class="page-content hidden">
                 <h3 class="text-2xl font-semibold mb-6">Resultados da Busca</h3>
                 <div id="search-results-list" class="pdf-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
@@ -149,7 +157,25 @@
         </div>
     </main>
 
-    <!-- ALTERAÇÃO: Modal do Visualizador de PDF foi removido -->
+    <!-- Modal do Visualizador de PDF (ADICIONADO DE VOLTA) -->
+    <div id="pdf-viewer-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden" aria-hidden="true">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-6xl h-[95vh] flex flex-col overflow-hidden">
+            <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+                <h4 id="pdf-title" class="text-lg font-semibold truncate">Carregando...</h4>
+                <div class="flex items-center gap-2">
+                    <a id="pdf-download-link" href="#" download target="_blank" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700" title="Baixar PDF">
+                        <i data-lucide="download" class="w-5 h-5"></i>
+                    </a>
+                    <button id="pdf-close-btn" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700" title="Fechar">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="flex-1 bg-gray-200 dark:bg-gray-900">
+                <embed id="pdf-embed" src="about:blank" type="application/pdf" class="w-full h-full border-0" title="Visualizador de PDF" />
+            </div>
+        </div>
+    </div>
 
     <!-- Script Principal da Aplicação -->
     <script>
@@ -184,8 +210,11 @@
         'penal': {
             icon: 'gavel', title: 'Penal',
             files: [
-                // Adicione seus arquivos de Penal aqui
-                // { title: 'Teoria Geral do Crime', filePath: 'pdfs/penal/teoria_crime.pdf' },
+                { title: 'Aplicação da Lei Penal em Relação às Pessoas', filePath: 'aplicação da lei penal em relação ás pessoas.pdf' },
+                { title: 'Da Teoria Geral do Crime', filePath: 'Da teoria geral do crime.pdf' },
+                { title: 'Do Elemento Geral do Crime', filePath: 'do elemento geral do crime.pdf' },
+                { title: 'Noções Essenciais - Fontes do Direito Penal', filePath: 'nocoes essenciais fontes do direito penal.pdf' },
+                { title: 'Princípio da Legalidade', filePath: 'principio da legalidade.pdf' }
             ]
         },
         'trabalhista': {
@@ -228,6 +257,19 @@
             files: [
                 // Adicione seus arquivos de Ambiental aqui
                 // { title: 'Política Nacional do Meio Ambiente', filePath: 'pdfs/ambiental/politica_ambiental.pdf' }
+            ]
+        },
+        'humanos': {
+            icon: 'heart', title: 'Direitos Humanos',
+            files: [
+                { title: 'Direito à Vida', filePath: 'Direito à Vida.pdf' },
+                { title: 'Direito de Liberdade', filePath: 'DIREITO DE LIBERDADE.pdf' },
+                { title: 'Direitos da Nacionalidade', filePath: 'DIREITOS DA NACIONALIDADE.pdf' },
+                { title: 'Direitos Fundamentais', filePath: 'direitos fundamentais.pdf' },
+                { title: 'Direitos Humanos e os Tratados Internacionais', filePath: 'direitos humanos e os tratados internacionais.pdf' },
+                { title: 'Direitos Sociais', filePath: 'DIREITOS SOCIAIS.pdf' },
+                { title: 'Proteção Internacional dos Direitos Humanos', filePath: 'Proteção Internacional dos Direitos Humanos.pdf' },
+                { title: 'Remédios Constitucionais', filePath: 'REMÉDIOS CONSTITUCIONAISpdf.pdf' }
             ]
         }
     };
@@ -335,12 +377,12 @@
                     </p>
                 </div>
                 <div class="p-4 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-200 dark:border-gray-700 flex items-center gap-3">
-                    <!-- ALTERAÇÃO: "Ler Agora" agora é um link <a> que abre em nova aba -->
-                    <a href="${file.filePath}" target="_blank" class="w-full text-sm bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
-                            title="Abrir PDF em nova aba">
+                    <!-- ALTERAÇÃO: "Ler Agora" voltou a ser um botão -->
+                    <button class="read-pdf-btn w-full text-sm bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
+                            data-path="${file.filePath}" data-title="${file.title}">
                         <i data-lucide="book-open" class="w-4 h-4"></i>
                         Ler Agora
-                    </a>
+                    </button>
                     <a href="${file.filePath}" download target="_blank" class="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600" title="Baixar PDF">
                         <i data-lucide="download" class="w-5 h-5"></i>
                     </a>
@@ -380,10 +422,28 @@
             }
         });
 
-        // ALTERAÇÃO: Removido o event listener para '.read-pdf-btn'
-        // O link <a> agora cuida da abertura do PDF.
+        // Abrir PDF (Usando delegação de eventos) (ADICIONADO DE VOLTA)
+        contentArea.addEventListener('click', (e) => {
+            const readBtn = e.target.closest('.read-pdf-btn');
+            if (readBtn) {
+                e.preventDefault();
+                const path = readBtn.dataset.path;
+                const title = readBtn.dataset.title;
+                openPdf(path, title);
+            }
+        });
 
-        // ALTERAÇÃO: Removidos os listeners para fechar o modal
+        // Fechar PDF (botão 'X') (ADICIONADO DE VOLTA)
+        document.getElementById('pdf-close-btn').addEventListener('click', closePdf);
+
+        // Adiciona evento para fechar modal clicando no backdrop (fundo escuro) (ADICIONADO DE VOLTA)
+        const modal = document.getElementById('pdf-viewer-modal');
+        modal.addEventListener('click', (e) => {
+            // Se o clique foi no próprio backdrop (e.target) e não em um filho
+            if (e.target.id === 'pdf-viewer-modal') {
+                closePdf();
+            }
+        });
         
         // Busca
         searchBar.addEventListener('input', (e) => {
@@ -424,8 +484,32 @@
         }
     }
 
-    // ALTERAÇÃO: Função 'openPdf' removida
-    // ALTERAÇÃO: Função 'closePdf' removida
+    // Função 'openPdf' (ADICIONADA DE VOLTA)
+    function openPdf(path, title) {
+        const modal = document.getElementById('pdf-viewer-modal');
+        const embed = document.getElementById('pdf-embed');
+        const titleEl = document.getElementById('pdf-title');
+        const downloadLink = document.getElementById('pdf-download-link');
+        
+        titleEl.textContent = title;
+        embed.src = path;
+        downloadLink.href = path;
+        
+        modal.classList.remove('hidden');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden'; // Impede scroll do body
+    }
+
+    // Função 'closePdf' (ADICIONADA DE VOLTA)
+    function closePdf() {
+        const modal = document.getElementById('pdf-viewer-modal');
+        const embed = document.getElementById('pdf-embed');
+        
+        modal.classList.add('hidden');
+        modal.setAttribute('aria-hidden', 'true');
+        embed.src = 'about:blank'; // Libera o recurso
+        document.body.style.overflow = ''; // Restaura scroll do body
+    }
 
     function handleSearch(query) {
         const searchTerm = query.toLowerCase().trim();
@@ -462,4 +546,6 @@
     </script>
 </body>
 </html>
+
+
 
